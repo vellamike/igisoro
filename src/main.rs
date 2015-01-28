@@ -1,6 +1,4 @@
 // Early attempt at an igisoro implementation
-
-
 use std::rand;
 use std::rand::Rng;
 
@@ -50,9 +48,29 @@ fn display_state(a:&[[u8;8];2]){
     println!("{}", s);
 }
 
+fn play_move(player_state:&mut [[u8;8];2], clockwise:bool, mut current_row:uint, mut current_column:uint, num_seeds:int){
+//the first thing we want to do, to understand how to change memory in arrays, is add one element to 0,0
+    player_state[0][0] += 1;
+
+    //let's try a traversal, moving from x to y in 3 counter-clockwise steps.
+    let max_row = 1; //fix for now
+    let max_column = 7; // fix for now
+    let mut num_seeds = num_seeds; // fix for now
+    let mut subtractor = 0;
+    for seed in range(0, num_seeds) {
+        if current_column >= max_column {current_row = 1;subtractor += 1}
+        println!("{}", player_state[current_row][current_column - subtractor]);
+        current_column += 1;
+    };
+}
+
 fn main() {
     let player_1_state = smart_random_initializer(8,8,2);
     display_state(&player_1_state);    
     let player_2_state = smart_random_initializer(8,8,2);
-    display_state(&player_2_state);    
+    display_state(&player_2_state);
+    let mut player_3_state = smart_random_initializer(8,8,2);
+    display_state(&player_3_state);
+    play_move(&mut player_3_state, true, 0, 0, 3);
+    display_state(&player_3_state);
 }
