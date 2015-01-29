@@ -49,11 +49,26 @@ fn display_state(a:&[[u8;8];2]){
 }
 
 fn play_move(player_state:&mut [[u8;8];2], clockwise:bool, mut current_row:uint, mut current_column:uint, num_seeds:int){
-//the first thing we want to do, to understand how to change memory in arrays, is add one element to 0,0
+    
+    //For this to work some tests are needed.
+
+    // Assumptions:
+    // 1. Movement is counter clockwise
+    // 2. There are only two rows, but n columns
+    
+    // Proposed algorithm outline:
+    // 1. Keep Track of current position (row, column) & moves left (seeds remaining)
+    // 2. Based on position, pick next move: right, left, change_row. This can be some quite
+    //    simple heuristics. E.g IF {row == TOP and column == 0} THEN move = change_row or IF {row == BOTTOM and column != max_column} THEN move = right.
+    //    Could use an enum for this.
+    // 3. Implement move, update new position, repeat
+    
+    // Variables assigned in this way:
     player_state[0][0] += 1;
 
     //let's try a traversal, moving from x to y in 3 counter-clockwise steps.
-    let max_row = 1; //fix for now
+    // WARNING: The following implementation is broken, check out the proposed algorithm outline above
+    let bool moving_right;
     let max_column = 7; // fix for now
     let mut num_seeds = num_seeds; // fix for now
     let mut subtractor = 0;
