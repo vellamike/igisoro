@@ -48,8 +48,35 @@ fn display_state(a:&[[u8;8];2]){
     println!("{}", s);
 }
 
+enum Corner {
+    TopRight,
+    TopLeft,
+    BottomRight,
+    BottomLeft,
+    NotCorner,
+}
+
+enum Rank{
+    Top,
+    Bottom
+}
+
+enum Direction{
+    Right,
+    Left,
+    Up,
+    Down
+}
+
+enum Edge{
+    Right,
+    Left,
+    NotAnEdge,
+}
+
+
 fn play_move(player_state:&mut [[u8;8];2], clockwise:bool, mut current_row:uint, mut current_column:uint, num_seeds:int){
-    
+
     //For this to work some tests are needed.
 
     // Assumptions:
@@ -64,19 +91,80 @@ fn play_move(player_state:&mut [[u8;8];2], clockwise:bool, mut current_row:uint,
     // 3. Implement move, update new position, repeat
     
     // Variables assigned in this way:
-    player_state[0][0] += 1;
+    // player_state[0][0] += 1;
+
+    let max_column = 7u; // fix for now
+    let mut direction : Direction;
+    let mut rank : Rank;
+    let mut corner : Corner;
+    let mut edge : Edge;
+    
+    //use pattern matching to figure out where we are:
+    
+    //set rank
+    match current_row {
+        0 => rank = Rank::Top,
+        1 => rank = Rank::Bottom,
+        _ => rank = Rank::Top
+    };
+
+    //set edge
+    match current_column {
+        0u => edge = Edge::Left,
+        a if a == max_column => edge = Edge::Right,
+        _ => edge = Edge::NotAnEdge
+    };
+
+    let position = (rank,edge);
+
+    //set the direction
+    match position {
+        (Rank::Top, Edge::NotAnEdge) => direction = Direction::Left,
+        (Rank::Bottom, Edge::NotAnEdge) => direction = Direction::Right,
+        (Rank::Top, Edge::Left) => direction = Direction::Down,
+        (Rank::Top, Edge::Right) => direction = Direction::Left,
+        (Rank::Bottom, Edge::Right) => direction = Direction::Up,
+        (Rank::Bottom, Edge::Left) => direction = Direction::Right
+    }
+
+
+//
+//    //set Corner: // I think a lot of this can be done better with matching
+//    if current_column == 0 {
+//        if rank == Rank::Top {
+//            corner = Corner::TopLeft;
+//        }
+//        else {
+//            corner = Corner::BottomLeft;
+//            }
+//    }
+//    
+//    else if current_column ==  max_column {
+//        if rank == Rank::Bottom{
+//            corner = Corner::TopRight;
+//        }
+//        else {
+//            corner = Corner::BottomRight;
+//            }
+//    }
+//    else {
+//        corner = Corner::NotCorner;
+//    };
+
+    
 
     //let's try a traversal, moving from x to y in 3 counter-clockwise steps.
     // WARNING: The following implementation is broken, check out the proposed algorithm outline above
-    let bool moving_right;
-    let max_column = 7; // fix for now
-    let mut num_seeds = num_seeds; // fix for now
-    let mut subtractor = 0;
-    for seed in range(0, num_seeds) {
-        if current_column >= max_column {current_row = 1;subtractor += 1}
-        println!("{}", player_state[current_row][current_column - subtractor]);
-        current_column += 1;
-    };
+//    let moving_right = true;
+
+//    let mut num_seeds = num_seeds; // fix for now
+//    let mut subtractor = 0;
+//    for seed in range(0, num_seeds) {
+//        if current_column >= max_column {current_row = 1;subtractor += 1}
+//        println!("{}", player_state[current_row][current_column - subtractor]);
+//        current_column += 1;
+//    };
+//
 }
 
 fn main() {
